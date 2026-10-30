@@ -11,20 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class StateQuizRecyclerAdapter extends RecyclerView.Adapter<StateQuizRecyclerAdapter.StateQuizHolder>
 {
-    private final Context context;
-    private List<StateQuiz> values;
-    private List<StateQuiz> originalValues;
+    //private final Context context;
+    //private List<StateQuiz> values;
+    //private List<StateQuiz> originalValues;
 
-    public StateQuizRecyclerAdapter(Context context, List<StateQuiz> stateQuizList) {
-        this.context = context;
-        this.values = stateQuizList;
-        this.originalValues = new ArrayList<StateQuiz>(stateQuizList);
-    }
+//    public StateQuizRecyclerAdapter(Context context, List<StateQuiz> stateQuizList) {
+//        this.context = context;
+//        this.values = stateQuizList;
+//        this.originalValues = new ArrayList<StateQuiz>(stateQuizList);
+//    }
 
-    public void sync() {
-        originalValues = new ArrayList<StateQuiz> (values);
-    }
-
+//    public void sync() {
+//        originalValues = new ArrayList<StateQuiz> (values);
+//    }
+//
     public static class StateQuizHolder extends RecyclerView.ViewHolder {
 
         //Declare layout elements for displayed info (probably textviews)
@@ -44,18 +44,18 @@ public class StateQuizRecyclerAdapter extends RecyclerView.Adapter<StateQuizRecy
 
     @Override
     public void onBindViewHolder(StateQuizHolder holder, int position) {
-        StateQuiz stateQuiz = values.get(position);
+        //StateQuiz stateQuiz = values.get(position);
 
         //Set values like holder.value.setText();
     }
 
     @Override
     public int getItemCount() {
-        if (values != null) {
-            return values.size();
-        } else {
+//        //if (values != null) {
+//            return values.size();
+//        } else {
             return 0;
-        }
+//        }
     }
 
     //Filter method for potential search feature?

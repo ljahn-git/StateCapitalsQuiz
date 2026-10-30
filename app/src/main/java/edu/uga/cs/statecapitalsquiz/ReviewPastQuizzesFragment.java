@@ -27,7 +27,7 @@ public class ReviewPastQuizzesFragment extends Fragment {
     //private String mParam1;
     //private String mParam2;
 
-    private List<StateQuiz> stateQuizList;
+    //private List<StateQuiz> stateQuizList;
     private RecyclerView recyclerView;
     private StateQuizRecyclerAdapter recyclerAdapter;
 
@@ -76,7 +76,7 @@ public class ReviewPastQuizzesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        stateQuizList = new ArrayList<StateQuiz>();
+        //stateQuizList = new ArrayList<StateQuiz>();
 
         //Create stateQuizData-esque object and call the below StateQuizDBReader class to asynchronously retrieve state quiz data from db
     }

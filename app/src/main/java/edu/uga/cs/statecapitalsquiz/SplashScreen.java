@@ -1,14 +1,17 @@
 package edu.uga.cs.statecapitalsquiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +41,9 @@ public class SplashScreen extends Fragment {
      * @return A new instance of fragment SplashScreen.
      */
     // TODO: Rename and change types and number of parameters
+
+    Button newQuizButton;
+    Button viewPastQuizzesButton;
     public static SplashScreen newInstance() {
         SplashScreen fragment = new SplashScreen();
 //        Bundle args = new Bundle();
@@ -66,6 +72,28 @@ public class SplashScreen extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        newQuizButton = view.findViewById(R.id.startNewQuizButton);
+        viewPastQuizzesButton = view.findViewById(R.id.viewPastQuizzesButton);
+
+        newQuizButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), QuizActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
+
+        viewPastQuizzesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReviewPastQuizzesFragment reviewPastQuizzesFragment = ReviewPastQuizzesFragment.newInstance();
+
+                FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentContainerView, reviewPastQuizzesFragment);
+                fragmentTransaction.commit();
+            }
+        });
     }
 
     @Override
