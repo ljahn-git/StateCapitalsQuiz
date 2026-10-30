@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.StateCapitalsQuiz" parent="Base.Theme.StateCapitalsQuiz" />
+
+    <style name="WhiteSearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Tint for all icons (buttons) within the SearchView -->
+        <item name="colorControlNormal">@color/white</item>
+        <!-- You might need other attributes for text color etc. -->
+    </style>
 </resources>
