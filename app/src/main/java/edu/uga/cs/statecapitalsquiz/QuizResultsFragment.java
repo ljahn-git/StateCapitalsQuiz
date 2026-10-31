@@ -1,12 +1,18 @@
 package edu.uga.cs.statecapitalsquiz;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +30,10 @@ public class QuizResultsFragment extends Fragment {
     //private String mParam1;
     //private String mParam2;
 
+    TextView quizScoreText;
+
+    Button goToHomeButton;
+
     public QuizResultsFragment() {
         // Required empty public constructor
     }
@@ -35,7 +45,7 @@ public class QuizResultsFragment extends Fragment {
      * @return A new instance of fragment QuizResultsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static QuizResultsFragment newInstance(String param1, String param2) {
+    public static QuizResultsFragment newInstance() {
         QuizResultsFragment fragment = new QuizResultsFragment();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
@@ -58,5 +68,31 @@ public class QuizResultsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_quiz_results, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        quizScoreText = view.findViewById(R.id.quizScoreText);
+        goToHomeButton = view.findViewById(R.id.goToHomeButton);
+
+        int placeholderScore = 5;
+        quizScoreText.setText(placeholderScore + "/6");
+        if (placeholderScore > 4) {
+            quizScoreText.setTextColor(Color.GREEN);
+        } else if (placeholderScore > 2) {
+            quizScoreText.setTextColor(Color.YELLOW);
+        } else {
+            quizScoreText.setTextColor(Color.RED);
+        }
+
+        goToHomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), MainActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 }

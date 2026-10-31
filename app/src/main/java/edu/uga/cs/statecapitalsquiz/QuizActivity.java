@@ -24,6 +24,16 @@ public class QuizActivity extends AppCompatActivity {
 
         ViewPager2 pager = findViewById(R.id.viewpager);
         StateQuizPagerAdapter sqpAdapter = new StateQuizPagerAdapter(getSupportFragmentManager(), getLifecycle());
+
+        //Pass info from database here (will need to update StateQuizFragment and QuizResultsFragment to accept more info in newInstance method)
+
+        for (int i = 0; i < 6; i++) {
+            StateQuizFragment sqf = StateQuizFragment.newInstance(i);
+            sqpAdapter.addFragment(sqf);
+        }
+        QuizResultsFragment qrf = QuizResultsFragment.newInstance();
+        sqpAdapter.addFragment(qrf);
+
         pager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         pager.setAdapter(sqpAdapter);
     }

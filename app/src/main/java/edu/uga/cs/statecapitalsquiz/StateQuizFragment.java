@@ -27,6 +27,7 @@ public class StateQuizFragment extends Fragment {
     //private String mParam1;
     //private String mParam2;
 
+    TextView questionNumberText;
     TextView joinDateText;
     TextView questionText;
     RadioButton question1;
@@ -75,13 +76,14 @@ public class StateQuizFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        questionNumberText = view.findViewById(R.id.questionNumberText);
         joinDateText = view.findViewById(R.id.joinDateText);
         questionText = view.findViewById(R.id.questionText);
         question1 = view.findViewById(R.id.radioButton);
         question2 = view.findViewById(R.id.radioButton2);
         question3 = view.findViewById(R.id.radioButton3);
 
-        // Pull data from database here?
+        questionNumberText.setText("Question " + (questionNum + 1) + ":");
     }
 
     public static int getNumberOfQuestions() {
