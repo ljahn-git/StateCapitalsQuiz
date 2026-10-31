@@ -84,9 +84,8 @@ public class StateQuizFragment extends Fragment {
         question3 = view.findViewById(R.id.radioButton3);
 
         questionNumberText.setText("Question " + (questionNum + 1) + ":");
-    }
-
-    public static int getNumberOfQuestions() {
-        return 6;
+        question1.setText("1. ");
+        question2.setText("2. ");
+        question3.setText("3. ");
     }
 }
