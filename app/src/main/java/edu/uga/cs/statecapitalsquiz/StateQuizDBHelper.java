@@ -141,12 +141,21 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<StateQuizData.QuizQuestion> getQuizQuestions(long quizId) {
+    public StateQuizData.Quiz getQuiz(long quizId) {
         SQLiteDatabase db = getReadableDatabase();
+
+        String quizDate = "";
+        int answeredQuestions = -1;
+        int correctAnswers = -1;
+
         List<Long> questionIds = new ArrayList<>(QUESTIONS_PER_QUIZ);
         try (Cursor cursor = db.query(
                 TABLE_QUIZZES,
-                QUIZZES_QUESTION_COLUMNS,
+                new String[]{
+                        QUIZZES_COLUMN_DATE,
+                        QUIZZES_COLUMN_ANSWERED_COUNT,
+                        QUIZZES_COLUMN_CORRECT_ANSWERS
+                },
                 QUIZZES_COLUMN_ID + " = ?",
                 new String[]{Long.toString(quizId)},
                 null,
@@ -158,45 +167,16 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
             for (int i = 0; i < QUESTIONS_PER_QUIZ; i++) {
                 questionIds.add(cursor.getLong(i));
             }
+            quizDate = cursor.getString(0);
+            answeredQuestions = cursor.getInt(1);
+            correctAnswers = cursor.getInt(2);
         }
 
-        List<StateQuizData.QuizQuestion> questions =
-                new ArrayList<>(QUESTIONS_PER_QUIZ);
-        for (long questionId : questionIds) {
-            try (Cursor cursor = db.query(
-                    TABLE_QUESTIONS,
-                    new String[]{
-                            QUESTIONS_COLUMN_STATE,
-                            QUESTIONS_COLUMN_CAPITAL,
-                            QUESTIONS_COLUMN_SECOND_CITY,
-                            QUESTIONS_COLUMN_THIRD_CITY,
-                            QUESTIONS_COLUMN_STATEHOOD_YEAR
-                    },
-                    QUESTIONS_COLUMN_ID + " = ?",
-                    new String[]{Long.toString(questionId)},
-                    null,
-                    null,
-                    null)) {
-                if (!cursor.moveToFirst()) {
-                    throw new IllegalStateException(
-                            "Question record not found: " + questionId);
-                }
 
-                String state = cursor.getString(0);
-                String capital = cursor.getString(1);
-                List<String> choices = new ArrayList<>(3);
-                choices.add(capital);
-                choices.add(cursor.getString(2));
-                choices.add(cursor.getString(3));
-                Collections.shuffle(choices);
-                questions.add(new StateQuizData.QuizQuestion(
-                        state, capital, choices, cursor.getInt(4)));
-            }
-        }
-        return questions;
+        return new StateQuizData.Quiz(quizId, quizDate, answeredQuestions, correctAnswers);
     }
 
-    public List<StateQuizData.QuizQuestion> getQuiz(long quizId) {
+    public List<StateQuizData.QuizQuestion> getQuizQuestions(long quizId) {
         SQLiteDatabase db = getReadableDatabase();
         List<Long> questionIds = new ArrayList<>(QUESTIONS_PER_QUIZ);
         try (Cursor cursor = db.query(

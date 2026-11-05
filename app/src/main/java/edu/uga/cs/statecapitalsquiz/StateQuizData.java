@@ -38,13 +38,18 @@ public class StateQuizData {
         return stateQuizDbHelper.getQuizQuestions(quizId);
     }
 
+    public Quiz getQuiz(long quizId) {
+        ensureDatabaseOpen();
+        return stateQuizDbHelper.getQuiz(quizId);
+    }
+
     private void ensureDatabaseOpen() {
         if (db == null || !db.isOpen()) {
             throw new IllegalStateException("The state quiz database is not open");
         }
     }
 
-    public class Quiz {
+    public static class Quiz {
         private  long quizID;
         private String quizDate;
         private int correctAnswers;
