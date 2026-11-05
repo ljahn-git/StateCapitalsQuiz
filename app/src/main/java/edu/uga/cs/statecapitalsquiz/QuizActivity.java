@@ -1,15 +1,25 @@
 package edu.uga.cs.statecapitalsquiz;
 
+import static androidx.core.app.PendingIntentCompat.getActivity;
+
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class QuizActivity extends AppCompatActivity {
+
+    private List<StateQuizData.QuizQuestion> questionList;
+    private StateQuizData stateQuizData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +36,28 @@ public class QuizActivity extends AppCompatActivity {
         StateQuizPagerAdapter sqpAdapter = new StateQuizPagerAdapter(getSupportFragmentManager(), getLifecycle());
 
         //Pass info from database here (will need to update StateQuizFragment and QuizResultsFragment to accept more info in newInstance method)
+        questionList = new ArrayList<StateQuizData.QuizQuestion>();
+        stateQuizData = new StateQuizData(this); //?
 
+        stateQuizData.open();
+
+        //Put below in DBReader function like ReviewJobLeadsFragment?
+
+        long quizId = stateQuizData.createRandomQuiz();
+        questionList = stateQuizData.getQuizQuestions(quizId);
+
+
+        //Add individual questions as parameter for each quiz fragment
         for (int i = 0; i < 6; i++) {
-            StateQuizFragment sqf = StateQuizFragment.newInstance(i);
+            StateQuizFragment sqf = StateQuizFragment.newInstance(i, questionList.get(i));
             sqpAdapter.addFragment(sqf);
         }
+
         QuizResultsFragment qrf = QuizResultsFragment.newInstance();
         sqpAdapter.addFragment(qrf);
 
         pager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         pager.setAdapter(sqpAdapter);
     }
+
 }

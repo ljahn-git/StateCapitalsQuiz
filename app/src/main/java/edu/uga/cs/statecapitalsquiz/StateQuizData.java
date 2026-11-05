@@ -44,6 +44,36 @@ public class StateQuizData {
         }
     }
 
+    public class Quiz {
+        private  long quizID;
+        private String quizDate;
+        private int correctAnswers;
+        private int answeredQuestions;
+
+        Quiz(long quizID, String quizDate, int correctAnswers, int answeredQuestions) {
+            this.quizID = quizID;
+            this.quizDate = quizDate;
+            this.correctAnswers = correctAnswers;
+            this.answeredQuestions = answeredQuestions;
+        }
+
+        public long getQuizID() {
+            return quizID;
+        }
+
+        public String getQuizDate() {
+            return quizDate;
+        }
+
+        public int getAnsweredQuestions() {
+            return answeredQuestions;
+        }
+
+        public int getCorrectAnswers() {
+            return correctAnswers;
+        }
+    }
+
     public static final class QuizQuestion {
         private final String state;
         private final String capital;

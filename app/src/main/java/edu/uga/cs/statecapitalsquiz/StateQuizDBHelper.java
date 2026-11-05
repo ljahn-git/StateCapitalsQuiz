@@ -196,6 +196,61 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         return questions;
     }
 
+    public List<StateQuizData.QuizQuestion> getQuiz(long quizId) {
+        SQLiteDatabase db = getReadableDatabase();
+        List<Long> questionIds = new ArrayList<>(QUESTIONS_PER_QUIZ);
+        try (Cursor cursor = db.query(
+                TABLE_QUIZZES,
+                QUIZZES_QUESTION_COLUMNS,
+                QUIZZES_COLUMN_ID + " = ?",
+                new String[]{Long.toString(quizId)},
+                null,
+                null,
+                null)) {
+            if (!cursor.moveToFirst()) {
+                throw new IllegalArgumentException("Quiz not found: " + quizId);
+            }
+            for (int i = 0; i < QUESTIONS_PER_QUIZ; i++) {
+                questionIds.add(cursor.getLong(i));
+            }
+        }
+
+        List<StateQuizData.QuizQuestion> questions =
+                new ArrayList<>(QUESTIONS_PER_QUIZ);
+        for (long questionId : questionIds) {
+            try (Cursor cursor = db.query(
+                    TABLE_QUESTIONS,
+                    new String[]{
+                            QUESTIONS_COLUMN_STATE,
+                            QUESTIONS_COLUMN_CAPITAL,
+                            QUESTIONS_COLUMN_SECOND_CITY,
+                            QUESTIONS_COLUMN_THIRD_CITY,
+                            QUESTIONS_COLUMN_STATEHOOD_YEAR
+                    },
+                    QUESTIONS_COLUMN_ID + " = ?",
+                    new String[]{Long.toString(questionId)},
+                    null,
+                    null,
+                    null)) {
+                if (!cursor.moveToFirst()) {
+                    throw new IllegalStateException(
+                            "Question record not found: " + questionId);
+                }
+
+                String state = cursor.getString(0);
+                String capital = cursor.getString(1);
+                List<String> choices = new ArrayList<>(3);
+                choices.add(capital);
+                choices.add(cursor.getString(2));
+                choices.add(cursor.getString(3));
+                Collections.shuffle(choices);
+                questions.add(new StateQuizData.QuizQuestion(
+                        state, capital, choices, cursor.getInt(4)));
+            }
+        }
+        return questions;
+    }
+
     @Override
     public void onConfigure(SQLiteDatabase db) {
         db.setForeignKeyConstraintsEnabled(true);
