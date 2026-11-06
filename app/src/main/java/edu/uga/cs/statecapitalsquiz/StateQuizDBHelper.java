@@ -173,7 +173,34 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         }
 
 
-        return new StateQuizData.Quiz(quizId, quizDate, answeredQuestions, correctAnswers);
+        return new StateQuizData.Quiz(quizId, quizDate, correctAnswers, answeredQuestions);
+    }
+
+    public List<StateQuizData.Quiz> getAllQuizzes() {
+        SQLiteDatabase db = getReadableDatabase();
+        List<StateQuizData.Quiz> quizzes = new ArrayList<>();
+        try (Cursor cursor = db.query(
+                TABLE_QUIZZES,
+                new String[]{
+                        QUIZZES_COLUMN_ID,
+                        QUIZZES_COLUMN_DATE,
+                        QUIZZES_COLUMN_CORRECT_ANSWERS,
+                        QUIZZES_COLUMN_ANSWERED_COUNT
+                },
+                null,
+                null,
+                null,
+                null,
+                QUIZZES_COLUMN_DATE + " DESC")) {
+            while (cursor.moveToNext()) {
+                long quizId = cursor.getLong(0);
+                String quizDate = cursor.getString(1);
+                int correctAnswers = cursor.getInt(2);
+                int answeredQuestions = cursor.getInt(3);
+                quizzes.add(new StateQuizData.Quiz(quizId, quizDate, correctAnswers, answeredQuestions));
+            }
+        }
+        return quizzes;
     }
 
     public void updateQuiz(long quizId, int answeredCount, int correctAnswers) {

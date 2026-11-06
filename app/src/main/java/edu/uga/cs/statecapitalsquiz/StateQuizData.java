@@ -43,6 +43,11 @@ public class StateQuizData {
         return stateQuizDbHelper.getQuiz(quizId);
     }
 
+    public List<Quiz> getAllQuizzes() {
+        ensureDatabaseOpen();
+        return stateQuizDbHelper.getAllQuizzes();
+    }
+
     public void updateQuiz(long quizID, int answeredCount, int correctAnswers) {
         ensureDatabaseOpen();
         stateQuizDbHelper.updateQuiz(quizID, answeredCount, correctAnswers);

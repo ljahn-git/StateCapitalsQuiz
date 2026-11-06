@@ -35,8 +35,8 @@ public class QuizResultsFragment extends Fragment {
     StateQuizData stateQuizData;
     long quizId;
     TextView quizScoreText;
-
     Button goToHomeButton;
+    private int correctAnswers;
 
     public QuizResultsFragment() {
         // Required empty public constructor
@@ -77,8 +77,7 @@ public class QuizResultsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         quizViewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
-        int correctAnswers = quizViewModel.getCorrectAnswers();
-        int answeredCount = quizViewModel.getAnsweredQuestions();
+        correctAnswers = quizViewModel.getCorrectAnswers();
 
         quizScoreText = view.findViewById(R.id.quizScoreText);
         goToHomeButton = view.findViewById(R.id.goToHomeButton);
@@ -109,6 +108,19 @@ public class QuizResultsFragment extends Fragment {
 
         stateQuizData = new StateQuizData(getActivity());
         stateQuizData.open();
-        stateQuizData.updateQuiz(quizId, answeredCount, correctAnswers);
+        new QuizResultWriter().execute();
+    }
+
+    private class QuizResultWriter extends AsyncTask<Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            stateQuizData.updateQuiz(quizId, 0, correctAnswers);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            stateQuizData.close();
+        }
     }
 }

@@ -4,34 +4,33 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filterable;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 public class StateQuizRecyclerAdapter extends RecyclerView.Adapter<StateQuizRecyclerAdapter.StateQuizHolder>
 {
-    //private final Context context;
-    //private List<StateQuiz> values;
-    //private List<StateQuiz> originalValues;
+    private final Context context;
+    private final List<StateQuizData.Quiz> quizList;
 
-//    public StateQuizRecyclerAdapter(Context context, List<StateQuiz> stateQuizList) {
-//        this.context = context;
-//        this.values = stateQuizList;
-//        this.originalValues = new ArrayList<StateQuiz>(stateQuizList);
-//    }
+    public StateQuizRecyclerAdapter(Context context, List<StateQuizData.Quiz> quizList) {
+        this.context = context;
+        this.quizList = quizList;
+    }
 
-//    public void sync() {
-//        originalValues = new ArrayList<StateQuiz> (values);
-//    }
-//
     public static class StateQuizHolder extends RecyclerView.ViewHolder {
+        public TextView quizValue1;
+        public TextView quizValue2;
+        public TextView quizValue3;
 
-        //Declare layout elements for displayed info (probably textviews)
         public StateQuizHolder(View itemView) {
             super(itemView);
-
-            //Find layout elements in layout file
+            quizValue1 = itemView.findViewById(R.id.quizValue1);
+            quizValue2 = itemView.findViewById(R.id.quizValue2);
+            quizValue3 = itemView.findViewById(R.id.quizValue3);
         }
     }
 
@@ -43,20 +42,27 @@ public class StateQuizRecyclerAdapter extends RecyclerView.Adapter<StateQuizRecy
     }
 
     @Override
-    public void onBindViewHolder(StateQuizHolder holder, int position) {
-        //StateQuiz stateQuiz = values.get(position);
-
-        //Set values like holder.value.setText();
+    public void onBindViewHolder(@NonNull StateQuizHolder holder, int position) {
+        StateQuizData.Quiz quiz = quizList.get(position);
+        String quizDateTime = quiz.getQuizDate();
+        String datePart;
+        String timePart;
+        if (quizDateTime != null && quizDateTime.contains(" ")) {
+            String[] parts = quizDateTime.split(" ");
+            datePart = parts[0];
+            timePart = parts.length > 1 ? parts[1] : "";
+        } else {
+            datePart = quizDateTime;
+            timePart = "";
+        }
+        holder.quizValue1.setText("Date: " + datePart);
+        holder.quizValue2.setText("Time: " + timePart);
+        holder.quizValue3.setVisibility(View.VISIBLE);
+        holder.quizValue3.setText("Score: " + quiz.getCorrectAnswers() + " / 6");
     }
 
     @Override
     public int getItemCount() {
-//        //if (values != null) {
-//            return values.size();
-//        } else {
-            return 0;
-//        }
+        return quizList != null ? quizList.size() : 0;
     }
-
-    //Filter method for potential search feature?
 }

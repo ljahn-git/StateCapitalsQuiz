@@ -3,31 +3,23 @@ package edu.uga.cs.statecapitalsquiz;
 import androidx.lifecycle.ViewModel;
 
 public class QuizViewModel extends ViewModel {
-    private boolean[] questionsAnswered = new boolean[6];
-
-    private int answeredQuestions = 0;
-    private int correctAnswers = 0;
-
-    public boolean isQuestionAnswered(int questionNum) {
-        return questionsAnswered[questionNum];
-    }
+    private boolean[] questionCorrect = new boolean[6];
 
     public void answerQuestion(int questionNum, boolean correct) {
-        if(!questionsAnswered[questionNum]) {
-            questionsAnswered[questionNum] = true;
-            answeredQuestions++;
-            if (correct) {
-                correctAnswers++;
-            }
-        }
+        questionCorrect[questionNum] = correct;
     }
 
-    public int getAnsweredQuestions() {
-        return answeredQuestions;
+    public boolean isQuestionCorrect(int questionNum) {
+        return questionCorrect[questionNum];
     }
 
     public int getCorrectAnswers() {
-        return correctAnswers;
+        int count = 0;
+        for (boolean correct : questionCorrect) {
+            if (correct) {
+                count++;
+            }
+        }
+        return count;
     }
-
 }
