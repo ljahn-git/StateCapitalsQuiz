@@ -17,6 +17,7 @@ public class StateQuizPagerAdapter extends FragmentStateAdapter {
 
     public void addFragment(Fragment fragment) {
         fragments.add(fragment);
+        notifyItemInserted(fragments.size() - 1);
     }
 
     @Override

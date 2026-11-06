@@ -21,6 +21,8 @@ public class QuizActivity extends AppCompatActivity {
     private List<StateQuizData.QuizQuestion> questionList;
     private StateQuizData stateQuizData;
 
+    private StateQuizPagerAdapter sqpAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +35,7 @@ public class QuizActivity extends AppCompatActivity {
         });
 
         ViewPager2 pager = findViewById(R.id.viewpager);
-        StateQuizPagerAdapter sqpAdapter = new StateQuizPagerAdapter(getSupportFragmentManager(), getLifecycle());
+        sqpAdapter = new StateQuizPagerAdapter(getSupportFragmentManager(), getLifecycle());
 
         //Pass info from database here (will need to update StateQuizFragment and QuizResultsFragment to accept more info in newInstance method)
         questionList = new ArrayList<StateQuizData.QuizQuestion>();
@@ -41,23 +43,49 @@ public class QuizActivity extends AppCompatActivity {
 
         stateQuizData.open();
 
+        new QuizDBCreator().execute();
+
         //Put below in DBReader function like ReviewJobLeadsFragment?
 
-        long quizId = stateQuizData.createRandomQuiz();
-        questionList = stateQuizData.getQuizQuestions(quizId);
+        //long quizId = stateQuizData.createRandomQuiz();
+        //questionList = stateQuizData.getQuizQuestions(quizId);
 
 
         //Add individual questions as parameter for each quiz fragment
-        for (int i = 0; i < 6; i++) {
-            StateQuizFragment sqf = StateQuizFragment.newInstance(i, questionList.get(i));
-            sqpAdapter.addFragment(sqf);
-        }
+//        for (int i = 0; i < 6; i++) {
+//            StateQuizFragment sqf = StateQuizFragment.newInstance(i, questionList.get(i));
+//            sqpAdapter.addFragment(sqf);
+//        }
 
-        QuizResultsFragment qrf = QuizResultsFragment.newInstance();
-        sqpAdapter.addFragment(qrf);
+        //QuizResultsFragment qrf = QuizResultsFragment.newInstance();
+        //sqpAdapter.addFragment(qrf);
 
         pager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         pager.setAdapter(sqpAdapter);
+    }
+
+    public class QuizDBCreator extends AsyncTask<Void, List<StateQuizData.QuizQuestion>> {
+        @Override
+        protected List<StateQuizData.QuizQuestion> doInBackground(Void... params) {
+
+            long quizId = stateQuizData.createRandomQuiz();
+            List<StateQuizData.QuizQuestion> quizQuestions = stateQuizData.getQuizQuestions(quizId);
+
+            return quizQuestions;
+        }
+
+        @Override
+        protected void onPostExecute(List<StateQuizData.QuizQuestion> quizQuestions) {
+            questionList = quizQuestions;
+            for (int i = 0; i < 6; i++) {
+                StateQuizFragment sqf = StateQuizFragment.newInstance(i, questionList.get(i));
+                sqpAdapter.addFragment(sqf);
+            }
+
+            QuizResultsFragment qrf = QuizResultsFragment.newInstance();
+            sqpAdapter.addFragment(qrf);
+        }
+
     }
 
 }

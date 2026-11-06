@@ -43,6 +43,11 @@ public class StateQuizData {
         return stateQuizDbHelper.getQuiz(quizId);
     }
 
+    public void updateQuiz(long quizID, int answeredCount, int correctAnswers) {
+        ensureDatabaseOpen();
+        stateQuizDbHelper.updateQuiz(quizID, answeredCount, correctAnswers);
+    }
+
     private void ensureDatabaseOpen() {
         if (db == null || !db.isOpen()) {
             throw new IllegalStateException("The state quiz database is not open");
