@@ -48,6 +48,7 @@ public class StateQuizFragment extends Fragment {
     private String[] questionArray;
 
     long quizID;
+    StateQuizData.Quiz myQuiz;
 
     //Create variables for passed String[]s for states, question 1s, question 2s, and question 3s?
 
@@ -105,6 +106,10 @@ public class StateQuizFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //stateQuizData = new StateQuizData(getActivity());
+        //stateQuizData.open();
+        //myQuiz = stateQuizData.getQuiz(quizID);
+
         stateName = questionArray[0];
         capital = questionArray[1];
         choice1 = questionArray[2];
@@ -131,11 +136,32 @@ public class StateQuizFragment extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId != -1) {
-                    //RadioButton selectedRadioButton = group.findViewById(checkedId);
-                    selectedAnswer = checkedId;
+                    RadioButton selectedRadioButton = group.findViewById(checkedId);
+
+                    stateQuizData = new StateQuizData(getActivity());
+                    stateQuizData.open();
+                    myQuiz = stateQuizData.getQuiz(quizID);
+                    if (selectedRadioButton.getText().equals(capital)) {
+                        stateQuizData.updateQuiz(quizID, myQuiz.getAnsweredQuestions() + 1, myQuiz.getCorrectAnswers() + 1);
+                    } else {
+                        stateQuizData.updateQuiz(quizID, myQuiz.getAnsweredQuestions() + 1, myQuiz.getCorrectAnswers());
+                    }
                 }
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+//        StateQuizData myData = new StateQuizData(getActivity());
+//        StateQuizData.Quiz temp = myData.getQuiz(quizID);
+//        if (questionArray[2 + selectedAnswer].equals(capital)) {
+//            myData.updateQuiz(quizID, temp.getAnsweredQuestions() + 1, temp.getCorrectAnswers() + 1);
+//        } else {
+//            myData.updateQuiz(quizID, temp.getAnsweredQuestions() + 1, temp.getCorrectAnswers());
+//        }
     }
 
     @Override
@@ -148,12 +174,7 @@ public class StateQuizFragment extends Fragment {
 //            RadioButotn selectedRadioButton =
 //        }
 
-        StateQuizData.Quiz temp = stateQuizData.getQuiz(quizID);
-        if (questionArray[2 + selectedAnswer].equals(capital)) {
-            stateQuizData.updateQuiz(quizID, temp.getAnsweredQuestions() + 1, temp.getCorrectAnswers() + 1);
-        } else {
-            stateQuizData.updateQuiz(quizID, temp.getAnsweredQuestions() + 1, temp.getCorrectAnswers());
-        }
+
 
     }
 

@@ -30,6 +30,8 @@ public class QuizResultsFragment extends Fragment {
     //private String mParam1;
     //private String mParam2;
 
+    StateQuizData stateQuizData;
+    long quizId;
     TextView quizScoreText;
 
     Button goToHomeButton;
@@ -45,23 +47,21 @@ public class QuizResultsFragment extends Fragment {
      * @return A new instance of fragment QuizResultsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static QuizResultsFragment newInstance() {
+    public static QuizResultsFragment newInstance(long quizID) {
         QuizResultsFragment fragment = new QuizResultsFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putLong("quizId", quizID);
+        fragment.setArguments(args);
         return fragment;
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            quizId = getArguments().getLong("quizId");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +77,12 @@ public class QuizResultsFragment extends Fragment {
         quizScoreText = view.findViewById(R.id.quizScoreText);
         goToHomeButton = view.findViewById(R.id.goToHomeButton);
 
-        int placeholderScore = 5;
+        stateQuizData = new StateQuizData(getActivity());
+        stateQuizData.open();
+        StateQuizData.Quiz finalQuiz = stateQuizData.getQuiz(quizId);
+
+        int placeholderScore = finalQuiz.getAnsweredQuestions();
+
         quizScoreText.setText(placeholderScore + "/6");
         if (placeholderScore > 4) {
             quizScoreText.setTextColor(Color.GREEN);

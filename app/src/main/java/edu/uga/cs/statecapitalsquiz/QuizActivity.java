@@ -86,7 +86,7 @@ public class QuizActivity extends AppCompatActivity {
                 sqpAdapter.addFragment(sqf);
             }
 
-            QuizResultsFragment qrf = QuizResultsFragment.newInstance();
+            QuizResultsFragment qrf = QuizResultsFragment.newInstance(quizID);
             sqpAdapter.addFragment(qrf);
         }
 

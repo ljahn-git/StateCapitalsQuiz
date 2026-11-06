@@ -164,9 +164,9 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
             if (!cursor.moveToFirst()) {
                 throw new IllegalArgumentException("Quiz not found: " + quizId);
             }
-            for (int i = 0; i < QUESTIONS_PER_QUIZ; i++) {
-                questionIds.add(cursor.getLong(i));
-            }
+//            for (int i = 0; i < QUESTIONS_PER_QUIZ; i++) {
+//                questionIds.add(cursor.getLong(i));
+//            }
             quizDate = cursor.getString(0);
             answeredQuestions = cursor.getInt(1);
             correctAnswers = cursor.getInt(2);
