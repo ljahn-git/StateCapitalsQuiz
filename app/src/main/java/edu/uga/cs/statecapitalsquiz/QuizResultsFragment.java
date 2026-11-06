@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ public class QuizResultsFragment extends Fragment {
     //private String mParam1;
     //private String mParam2;
 
+    private QuizViewModel quizViewModel;
     StateQuizData stateQuizData;
     long quizId;
     TextView quizScoreText;
@@ -74,20 +76,24 @@ public class QuizResultsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        quizViewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
+        int correctAnswers = quizViewModel.getCorrectAnswers();
+        int answeredCount = quizViewModel.getAnsweredQuestions();
+
         quizScoreText = view.findViewById(R.id.quizScoreText);
         goToHomeButton = view.findViewById(R.id.goToHomeButton);
 
-        stateQuizData = new StateQuizData(getActivity());
-        stateQuizData.open();
-        StateQuizData.Quiz finalQuiz = stateQuizData.getQuiz(quizId);
+        //stateQuizData = new StateQuizData(getActivity());
+        //stateQuizData.open();
+        //StateQuizData.Quiz finalQuiz = stateQuizData.getQuiz(quizId);
 
-        int placeholderScore = finalQuiz.getAnsweredQuestions();
+        int placeholderScore = correctAnswers;
 
         quizScoreText.setText(placeholderScore + "/6");
         if (placeholderScore > 4) {
             quizScoreText.setTextColor(Color.GREEN);
         } else if (placeholderScore > 2) {
-            quizScoreText.setTextColor(Color.YELLOW);
+            quizScoreText.setTextColor(Color.BLACK);
         } else {
             quizScoreText.setTextColor(Color.RED);
         }
@@ -100,5 +106,9 @@ public class QuizResultsFragment extends Fragment {
                 requireActivity().finish();
             }
         });
+
+        stateQuizData = new StateQuizData(getActivity());
+        stateQuizData.open();
+        stateQuizData.updateQuiz(quizId, answeredCount, correctAnswers);
     }
 }

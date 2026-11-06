@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public class StateQuizFragment extends Fragment {
     //private String mParam1;
     //private String mParam2;
 
+    private QuizViewModel quizViewModel;
     StateQuizData stateQuizData;
     TextView questionNumberText;
     TextView joinDateText;
@@ -110,6 +112,8 @@ public class StateQuizFragment extends Fragment {
         //stateQuizData.open();
         //myQuiz = stateQuizData.getQuiz(quizID);
 
+        quizViewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
+
         stateName = questionArray[0];
         capital = questionArray[1];
         choice1 = questionArray[2];
@@ -138,14 +142,17 @@ public class StateQuizFragment extends Fragment {
                 if (checkedId != -1) {
                     RadioButton selectedRadioButton = group.findViewById(checkedId);
 
-                    stateQuizData = new StateQuizData(getActivity());
-                    stateQuizData.open();
-                    myQuiz = stateQuizData.getQuiz(quizID);
-                    if (selectedRadioButton.getText().equals(capital)) {
-                        stateQuizData.updateQuiz(quizID, myQuiz.getAnsweredQuestions() + 1, myQuiz.getCorrectAnswers() + 1);
-                    } else {
-                        stateQuizData.updateQuiz(quizID, myQuiz.getAnsweredQuestions() + 1, myQuiz.getCorrectAnswers());
-                    }
+                    boolean correct = selectedRadioButton.getText().toString().equals("1. " + capital) || selectedRadioButton.getText().toString().equals("2. " + capital) || selectedRadioButton.getText().toString().equals("3. " + capital);
+                    quizViewModel.answerQuestion(questionNum, correct);
+
+//                    stateQuizData = new StateQuizData(getActivity());
+//                    stateQuizData.open();
+//                    myQuiz = stateQuizData.getQuiz(quizID);
+//                    if (selectedRadioButton.getText().equals(capital)) {
+//                        stateQuizData.updateQuiz(quizID, myQuiz.getAnsweredQuestions() + 1, myQuiz.getCorrectAnswers() + 1);
+//                    } else {
+//                        stateQuizData.updateQuiz(quizID, myQuiz.getAnsweredQuestions() + 1, myQuiz.getCorrectAnswers());
+//                    }
                 }
             }
         });
