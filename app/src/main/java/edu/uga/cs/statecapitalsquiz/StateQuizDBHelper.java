@@ -176,6 +176,20 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         return new StateQuizData.Quiz(quizId, quizDate, answeredQuestions, correctAnswers);
     }
 
+    public void updateQuiz(long quizId, int answeredCount, int correctAnswers) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(QUIZZES_COLUMN_ANSWERED_COUNT, answeredCount);
+        contentValues.put(QUIZZES_COLUMN_CORRECT_ANSWERS, correctAnswers);
+
+        String whereClause = QUIZZES_COLUMN_ID + " = ?";
+        String[] whereArgs = new String[] {quizId + ""};
+
+
+        db.update(TABLE_QUIZZES, contentValues, whereClause, whereArgs);
+    }
+
     public List<StateQuizData.QuizQuestion> getQuizQuestions(long quizId) {
         SQLiteDatabase db = getReadableDatabase();
         List<Long> questionIds = new ArrayList<>(QUESTIONS_PER_QUIZ);
