@@ -46,10 +46,6 @@ public class SplashScreen extends Fragment {
     Button viewPastQuizzesButton;
     public static SplashScreen newInstance() {
         SplashScreen fragment = new SplashScreen();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -62,6 +58,18 @@ public class SplashScreen extends Fragment {
 //        }
 //    }
 
+    /**
+     * Inflates the layout.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,6 +77,12 @@ public class SplashScreen extends Fragment {
         return inflater.inflate(R.layout.fragment_splash_screen, container, false);
     }
 
+    /**
+     * Sets up the newQuizButton and viewPastQuizzesButton respectively.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

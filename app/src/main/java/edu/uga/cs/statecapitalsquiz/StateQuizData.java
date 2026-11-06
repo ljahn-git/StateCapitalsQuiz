@@ -19,6 +19,9 @@ public class StateQuizData {
         db = stateQuizDbHelper.getWritableDatabase();
     }
 
+    /**
+     * Closes the connection
+     */
     public void close() {
         stateQuizDbHelper.close();
         db = null;

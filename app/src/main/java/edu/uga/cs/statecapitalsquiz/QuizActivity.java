@@ -17,6 +17,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity that houses the ViewPager and subsequent quiz and result fragments.
+ */
 public class QuizActivity extends AppCompatActivity {
 
     private List<StateQuizData.QuizQuestion> questionList;
@@ -29,6 +32,13 @@ public class QuizActivity extends AppCompatActivity {
     private StateQuizPagerAdapter sqpAdapter;
     private ViewPager2 pager;
 
+    /**
+     * Inflates the layout, sets up the pager, and executes the asynchronous quiz question retrieval
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,62 +73,38 @@ public class QuizActivity extends AppCompatActivity {
         stateQuizData.open();
         new QuizDBCreator().execute();
 
-//        if (quizViewModel.getQuizId() == -1) {
-//            stateQuizData = new StateQuizData(this);
-//            stateQuizData.open();
-//            new QuizDBCreator().execute();
-//        } else {
-//            quizId = quizViewModel.getQuizId();
-//        }
-
-
-
-        //currentPage = 0;
-
-
-
-
         //Pass info from database here (will need to update StateQuizFragment and QuizResultsFragment to accept more info in newInstance method)
-        questionList = new ArrayList<StateQuizData.QuizQuestion>();
-        //stateQuizData = new StateQuizData(this); //?
-
-//        stateQuizData.open();
-//
-//        new QuizDBCreator().execute();
-
-
-
+        //questionList = new ArrayList<StateQuizData.QuizQuestion>();
 
 
         pager.setCurrentItem(currentPage, false);
 
-        //Put below in DBReader function like ReviewJobLeadsFragment?
-
-        //long quizId = stateQuizData.createRandomQuiz();
-        //questionList = stateQuizData.getQuizQuestions(quizId);
-
-
-        //Add individual questions as parameter for each quiz fragment
-//        for (int i = 0; i < 6; i++) {
-//            StateQuizFragment sqf = StateQuizFragment.newInstance(i, questionList.get(i));
-//            sqpAdapter.addFragment(sqf);
-//        }
-
-        //QuizResultsFragment qrf = QuizResultsFragment.newInstance();
-        //sqpAdapter.addFragment(qrf);
-
-
     }
 
+    /**
+     * Saves the index of the current page when the page is destroyed
+     * @param bundle Bundle in which to place your saved state.
+     *
+     */
     @Override
     protected void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putInt("currentPage", ((ViewPager2) findViewById(R.id.viewpager)).getCurrentItem());
     }
 
+    /**
+     * Asynchronous task that retrieves the quiz questions and subsequently sets up the quiz fragments
+     */
     public class QuizDBCreator extends AsyncTask<Void, List<StateQuizData.QuizQuestion>> {
 
         long quizID;
+
+        /**
+         * Creates a new random quiz unless user was in the middle of an old one. After, quiz questions
+         * are retrieved from the database.
+         * @param params
+         * @return quizQuestions
+         */
         @Override
         protected List<StateQuizData.QuizQuestion> doInBackground(Void... params) {
 
@@ -128,13 +114,16 @@ public class QuizActivity extends AppCompatActivity {
                 quizID = stateQuizData.createRandomQuiz();
             }
 
-            //quizID = quizId;
-            //quizViewModel.setQuizId(quizID);
             List<StateQuizData.QuizQuestion> quizQuestions = stateQuizData.getQuizQuestions(quizID);
 
             return quizQuestions;
         }
 
+        /**
+         * Runs after doInBackground. Creates the quiz fragments with their question instances, followed
+         * by the quiz result fragment. Also restores the old current page if last quiz was interrupted.
+         * @param quizQuestions
+         */
         @Override
         protected void onPostExecute(List<StateQuizData.QuizQuestion> quizQuestions) {
 

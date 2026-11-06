@@ -32,8 +32,7 @@ public class QuizResultsFragment extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Creates an instance of the QuizResultsFragment with a quizID variable
      *
      * @return A new instance of fragment QuizResultsFragment.
      */
@@ -45,6 +44,11 @@ public class QuizResultsFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Retrieves the quizId argument.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,18 @@ public class QuizResultsFragment extends Fragment {
         }
     }
 
+    /**
+     * Inflates the layout.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,6 +76,13 @@ public class QuizResultsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_quiz_results, container, false);
     }
 
+    /**
+     * Sets the value of the final quiz score, sets up the home button, and starts the asynchronous
+     * QuizResultWriter task.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -86,6 +109,9 @@ public class QuizResultsFragment extends Fragment {
         new QuizResultWriter().execute();
     }
 
+    /**
+     * Asynchronous task that handles adding the user's results to the quiz in the database.
+     */
     private class QuizResultWriter extends AsyncTask<Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {

@@ -59,13 +59,12 @@ public class StateQuizFragment extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     *
-     * @return A new instance of fragment StateQuizFragment.
+     * Constructor for StateQuizFragment that accepts a question and a quizId as parameters
+     * @param questionNum
+     * @param question
+     * @param quizId
+     * @return
      */
-    // TODO: Rename and change types and number of parameters
     public static StateQuizFragment newInstance(int questionNum, StateQuizData.QuizQuestion question, long quizId) {
         StateQuizFragment fragment = new StateQuizFragment();
         Bundle args = new Bundle();
@@ -87,6 +86,11 @@ public class StateQuizFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Retrieves all of the needed for the quiz screne, including capital and wrong answers.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +101,18 @@ public class StateQuizFragment extends Fragment {
         }
     }
 
+    /**
+     * Inflates the layout
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,6 +120,12 @@ public class StateQuizFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_state_quiz, container, false);
     }
 
+    /**
+     * Sets all the text on screen and adds a listener to the radio buttons to update QuizViewModel.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

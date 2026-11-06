@@ -107,6 +107,10 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         return helperInstance;
     }
 
+    /**
+     * Creates quiz with random questions in a random order.
+     * @return
+     */
     public long createRandomQuiz() {
         SQLiteDatabase db = getWritableDatabase();
         List<Long> questionIds = new ArrayList<>(QUESTIONS_PER_QUIZ);
@@ -141,6 +145,11 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Retrieves a quiz from the database based off of its quizId.
+     * @param quizId
+     * @return
+     */
     public StateQuizData.Quiz getQuiz(long quizId) {
         SQLiteDatabase db = getReadableDatabase();
 
@@ -168,6 +177,10 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         return new StateQuizData.Quiz(quizId, quizDate, correctAnswers);
     }
 
+    /**
+     * Retrieves all quizzes from the database
+     * @return
+     */
     public List<StateQuizData.Quiz> getAllQuizzes() {
         SQLiteDatabase db = getReadableDatabase();
         List<StateQuizData.Quiz> quizzes = new ArrayList<>();
@@ -193,6 +206,11 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         return quizzes;
     }
 
+    /**
+     * Updates a singular quiz in the database based off its quizId
+     * @param quizId
+     * @param correctAnswers
+     */
     public void updateQuiz(long quizId, int correctAnswers) {
         SQLiteDatabase db = getReadableDatabase();
 
@@ -205,6 +223,11 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         db.update(TABLE_QUIZZES, contentValues, whereClause, whereArgs);
     }
 
+    /**
+     * Returns the questions for a quiz based off its quizId
+     * @param quizId
+     * @return
+     */
     public List<StateQuizData.QuizQuestion> getQuizQuestions(long quizId) {
         SQLiteDatabase db = getReadableDatabase();
         List<Long> questionIds = new ArrayList<>(QUESTIONS_PER_QUIZ);
@@ -265,6 +288,10 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         db.setForeignKeyConstraintsEnabled(true);
     }
 
+    /**
+     * Creates the database
+     * @param db The database.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL( CREATE_QUESTIONS );

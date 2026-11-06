@@ -32,12 +32,30 @@ public class ReviewPastQuizzesFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Inflates the layout
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_review_past_quizzes, container, false);
     }
 
+    /**
+     * Sets up the recycler view, home button, calls the asynchronous StateQuizDBReader.
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -63,6 +81,9 @@ public class ReviewPastQuizzesFragment extends Fragment {
         new StateQuizDBReader().execute();
     }
 
+    /**
+     * Asynchronous task that handles retrieving all quizzes from the database.
+     */
     private class StateQuizDBReader extends AsyncTask<Void, List<StateQuizData.Quiz>> {
         @Override
         protected List<StateQuizData.Quiz> doInBackground(Void... params) {
