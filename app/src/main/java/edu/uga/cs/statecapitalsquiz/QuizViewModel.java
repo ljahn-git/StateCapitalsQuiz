@@ -8,6 +8,15 @@ public class QuizViewModel extends ViewModel {
     private int answeredQuestions = 0;
     private int correctAnswers = 0;
 
+    private long quizId = -1;
+
+    public void setQuizId(long quizId) {
+        this.quizId = quizId;
+    }
+
+    public long getQuizId() {
+        return quizId;
+    }
     public boolean isQuestionAnswered(int questionNum) {
         return questionsAnswered[questionNum];
     }
