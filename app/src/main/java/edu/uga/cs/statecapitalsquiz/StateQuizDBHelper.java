@@ -145,15 +145,12 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
 
         String quizDate = "";
-        int answeredQuestions = -1;
         int correctAnswers = -1;
 
-        List<Long> questionIds = new ArrayList<>(QUESTIONS_PER_QUIZ);
         try (Cursor cursor = db.query(
                 TABLE_QUIZZES,
                 new String[]{
                         QUIZZES_COLUMN_DATE,
-                        QUIZZES_COLUMN_ANSWERED_COUNT,
                         QUIZZES_COLUMN_CORRECT_ANSWERS
                 },
                 QUIZZES_COLUMN_ID + " = ?",
@@ -164,16 +161,11 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
             if (!cursor.moveToFirst()) {
                 throw new IllegalArgumentException("Quiz not found: " + quizId);
             }
-//            for (int i = 0; i < QUESTIONS_PER_QUIZ; i++) {
-//                questionIds.add(cursor.getLong(i));
-//            }
             quizDate = cursor.getString(0);
-            answeredQuestions = cursor.getInt(1);
-            correctAnswers = cursor.getInt(2);
+            correctAnswers = cursor.getInt(1);
         }
 
-
-        return new StateQuizData.Quiz(quizId, quizDate, correctAnswers, answeredQuestions);
+        return new StateQuizData.Quiz(quizId, quizDate, correctAnswers);
     }
 
     public List<StateQuizData.Quiz> getAllQuizzes() {
@@ -184,8 +176,7 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
                 new String[]{
                         QUIZZES_COLUMN_ID,
                         QUIZZES_COLUMN_DATE,
-                        QUIZZES_COLUMN_CORRECT_ANSWERS,
-                        QUIZZES_COLUMN_ANSWERED_COUNT
+                        QUIZZES_COLUMN_CORRECT_ANSWERS
                 },
                 null,
                 null,
@@ -196,23 +187,20 @@ public class StateQuizDBHelper extends SQLiteOpenHelper {
                 long quizId = cursor.getLong(0);
                 String quizDate = cursor.getString(1);
                 int correctAnswers = cursor.getInt(2);
-                int answeredQuestions = cursor.getInt(3);
-                quizzes.add(new StateQuizData.Quiz(quizId, quizDate, correctAnswers, answeredQuestions));
+                quizzes.add(new StateQuizData.Quiz(quizId, quizDate, correctAnswers));
             }
         }
         return quizzes;
     }
 
-    public void updateQuiz(long quizId, int answeredCount, int correctAnswers) {
+    public void updateQuiz(long quizId, int correctAnswers) {
         SQLiteDatabase db = getReadableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(QUIZZES_COLUMN_ANSWERED_COUNT, answeredCount);
         contentValues.put(QUIZZES_COLUMN_CORRECT_ANSWERS, correctAnswers);
 
         String whereClause = QUIZZES_COLUMN_ID + " = ?";
         String[] whereArgs = new String[] {quizId + ""};
-
 
         db.update(TABLE_QUIZZES, contentValues, whereClause, whereArgs);
     }

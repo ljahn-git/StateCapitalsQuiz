@@ -48,9 +48,9 @@ public class StateQuizData {
         return stateQuizDbHelper.getAllQuizzes();
     }
 
-    public void updateQuiz(long quizID, int answeredCount, int correctAnswers) {
+    public void updateQuiz(long quizID, int correctAnswers) {
         ensureDatabaseOpen();
-        stateQuizDbHelper.updateQuiz(quizID, answeredCount, correctAnswers);
+        stateQuizDbHelper.updateQuiz(quizID, correctAnswers);
     }
 
     private void ensureDatabaseOpen() {
@@ -60,16 +60,14 @@ public class StateQuizData {
     }
 
     public static class Quiz {
-        private  long quizID;
-        private String quizDate;
-        private int correctAnswers;
-        private int answeredQuestions;
+        private final long quizID;
+        private final String quizDate;
+        private final int correctAnswers;
 
-        Quiz(long quizID, String quizDate, int correctAnswers, int answeredQuestions) {
+        Quiz(long quizID, String quizDate, int correctAnswers) {
             this.quizID = quizID;
             this.quizDate = quizDate;
             this.correctAnswers = correctAnswers;
-            this.answeredQuestions = answeredQuestions;
         }
 
         public long getQuizID() {
@@ -78,10 +76,6 @@ public class StateQuizData {
 
         public String getQuizDate() {
             return quizDate;
-        }
-
-        public int getAnsweredQuestions() {
-            return answeredQuestions;
         }
 
         public int getCorrectAnswers() {

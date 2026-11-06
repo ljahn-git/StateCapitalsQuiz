@@ -1,12 +1,10 @@
 package edu.uga.cs.statecapitalsquiz;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -15,23 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.List;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link QuizResultsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class QuizResultsFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    //private static final String ARG_PARAM1 = "param1";
-    //private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    //private String mParam1;
-    //private String mParam2;
 
     private QuizViewModel quizViewModel;
     StateQuizData stateQuizData;
@@ -50,7 +37,6 @@ public class QuizResultsFragment extends Fragment {
      *
      * @return A new instance of fragment QuizResultsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static QuizResultsFragment newInstance(long quizID) {
         QuizResultsFragment fragment = new QuizResultsFragment();
         Bundle args = new Bundle();
@@ -84,23 +70,16 @@ public class QuizResultsFragment extends Fragment {
         quizScoreText = view.findViewById(R.id.quizScoreText);
         goToHomeButton = view.findViewById(R.id.goToHomeButton);
 
-        int placeholderScore = correctAnswers;
-
-        quizScoreText.setText(placeholderScore + "/6");
-        if (placeholderScore > 4) {
+        quizScoreText.setText(correctAnswers + "/6");
+        if (correctAnswers > 4) {
             quizScoreText.setTextColor(Color.GREEN);
-        } else if (placeholderScore > 2) {
+        } else if (correctAnswers > 2) {
             quizScoreText.setTextColor(Color.BLACK);
         } else {
             quizScoreText.setTextColor(Color.RED);
         }
 
-        goToHomeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity().finish();
-            }
-        });
+        goToHomeButton.setOnClickListener(v -> requireActivity().finish());
 
         stateQuizData = new StateQuizData(getActivity());
         stateQuizData.open();
@@ -110,7 +89,7 @@ public class QuizResultsFragment extends Fragment {
     private class QuizResultWriter extends AsyncTask<Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            stateQuizData.updateQuiz(quizId, 0, correctAnswers);
+            stateQuizData.updateQuiz(quizId, correctAnswers);
             return null;
         }
 
@@ -118,25 +97,5 @@ public class QuizResultsFragment extends Fragment {
         protected void onPostExecute(Void result) {
             stateQuizData.close();
         }
-        StateQuizData.Quiz myQuiz = new StateQuizData.Quiz(quizId, "", correctAnswers, answeredCount);
-        new QuizDBUpdater().execute( myQuiz );
-    }
-
-    public class QuizDBUpdater extends AsyncTask<StateQuizData.Quiz, StateQuizData.Quiz> {
-
-        long quizID;
-        @Override
-        protected StateQuizData.Quiz doInBackground(StateQuizData.Quiz... params) {
-
-            stateQuizData.open();
-            stateQuizData.updateQuiz(params[0].getQuizID(), params[0].getAnsweredQuestions(), params[0].getCorrectAnswers());
-            return params[0];
-        }
-
-        @Override
-        protected void onPostExecute(StateQuizData.Quiz quiz) {
-            // Extra just in case
-        }
-
     }
 }
