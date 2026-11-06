@@ -65,10 +65,14 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     public class QuizDBCreator extends AsyncTask<Void, List<StateQuizData.QuizQuestion>> {
+
+        long quizID;
         @Override
         protected List<StateQuizData.QuizQuestion> doInBackground(Void... params) {
 
+
             long quizId = stateQuizData.createRandomQuiz();
+            quizID = quizId;
             List<StateQuizData.QuizQuestion> quizQuestions = stateQuizData.getQuizQuestions(quizId);
 
             return quizQuestions;
@@ -78,7 +82,7 @@ public class QuizActivity extends AppCompatActivity {
         protected void onPostExecute(List<StateQuizData.QuizQuestion> quizQuestions) {
             questionList = quizQuestions;
             for (int i = 0; i < 6; i++) {
-                StateQuizFragment sqf = StateQuizFragment.newInstance(i, questionList.get(i));
+                StateQuizFragment sqf = StateQuizFragment.newInstance(i, questionList.get(i), quizID);
                 sqpAdapter.addFragment(sqf);
             }
 

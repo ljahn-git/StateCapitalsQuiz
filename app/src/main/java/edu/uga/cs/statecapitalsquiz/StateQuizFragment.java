@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 /**
@@ -27,13 +28,17 @@ public class StateQuizFragment extends Fragment {
     //private String mParam1;
     //private String mParam2;
 
+    StateQuizData stateQuizData;
     TextView questionNumberText;
     TextView joinDateText;
     TextView questionText;
+
+    RadioGroup radioGroup;
     RadioButton question1;
     RadioButton question2;
     RadioButton question3;
     private int questionNum;
+    int selectedAnswer;
     String stateName;
     String stateJoinDate;
     String capital;
@@ -41,6 +46,8 @@ public class StateQuizFragment extends Fragment {
     String choice2;
     String choice3;
     private String[] questionArray;
+
+    long quizID;
 
     //Create variables for passed String[]s for states, question 1s, question 2s, and question 3s?
 
@@ -56,7 +63,7 @@ public class StateQuizFragment extends Fragment {
      * @return A new instance of fragment StateQuizFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static StateQuizFragment newInstance(int questionNum, StateQuizData.QuizQuestion question) {
+    public static StateQuizFragment newInstance(int questionNum, StateQuizData.QuizQuestion question, long quizId) {
         StateQuizFragment fragment = new StateQuizFragment();
         Bundle args = new Bundle();
         args.putInt("questionNum", questionNum);
@@ -69,8 +76,10 @@ public class StateQuizFragment extends Fragment {
         questionArray[3] = question.getChoices().get(1);
         questionArray[4] = question.getChoices().get(2);
         questionArray[5] = question.getStatehoodYear() + "";
-
         args.putStringArray("questionData", questionArray);
+
+        args.putLong("quizID", quizId);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,6 +90,7 @@ public class StateQuizFragment extends Fragment {
         if (getArguments() != null) {
             questionNum = getArguments().getInt("questionNum");
             questionArray = getArguments().getStringArray("questionData");
+            quizID = getArguments().getLong("quizID");
         }
     }
 
@@ -108,6 +118,7 @@ public class StateQuizFragment extends Fragment {
         question1 = view.findViewById(R.id.radioButton);
         question2 = view.findViewById(R.id.radioButton2);
         question3 = view.findViewById(R.id.radioButton3);
+        radioGroup = view.findViewById(R.id.radioGroup);
 
         questionNumberText.setText("Question " + (questionNum + 1) + ":");
         joinDateText.setText(stateName + " joined the union in " + stateJoinDate);
@@ -115,11 +126,34 @@ public class StateQuizFragment extends Fragment {
         question1.setText("1. " + choice1);
         question2.setText("2. " + choice2);
         question3.setText("3. " + choice3);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId != -1) {
+                    //RadioButton selectedRadioButton = group.findViewById(checkedId);
+                    selectedAnswer = checkedId;
+                }
+            }
+        });
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle bundle) {
         super.onSaveInstanceState(bundle);
+
+//        int selectedId = radioGroup.getCheckedRadioButtonId();
+//
+//        if(selectedId != -1) {
+//            RadioButotn selectedRadioButton =
+//        }
+
+        StateQuizData.Quiz temp = stateQuizData.getQuiz(quizID);
+        if (questionArray[2 + selectedAnswer].equals(capital)) {
+            stateQuizData.updateQuiz(quizID, temp.getAnsweredQuestions() + 1, temp.getCorrectAnswers() + 1);
+        } else {
+            stateQuizData.updateQuiz(quizID, temp.getAnsweredQuestions() + 1, temp.getCorrectAnswers());
+        }
 
     }
 
