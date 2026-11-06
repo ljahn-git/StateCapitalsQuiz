@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link QuizResultsFragment#newInstance} factory method to
@@ -82,10 +84,6 @@ public class QuizResultsFragment extends Fragment {
         quizScoreText = view.findViewById(R.id.quizScoreText);
         goToHomeButton = view.findViewById(R.id.goToHomeButton);
 
-        //stateQuizData = new StateQuizData(getActivity());
-        //stateQuizData.open();
-        //StateQuizData.Quiz finalQuiz = stateQuizData.getQuiz(quizId);
-
         int placeholderScore = correctAnswers;
 
         quizScoreText.setText(placeholderScore + "/6");
@@ -100,8 +98,6 @@ public class QuizResultsFragment extends Fragment {
         goToHomeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(v.getContext(), MainActivity.class);
-                //v.getContext().startActivity(intent);
                 requireActivity().finish();
             }
         });
@@ -122,5 +118,25 @@ public class QuizResultsFragment extends Fragment {
         protected void onPostExecute(Void result) {
             stateQuizData.close();
         }
+        StateQuizData.Quiz myQuiz = new StateQuizData.Quiz(quizId, "", correctAnswers, answeredCount);
+        new QuizDBUpdater().execute( myQuiz );
+    }
+
+    public class QuizDBUpdater extends AsyncTask<StateQuizData.Quiz, StateQuizData.Quiz> {
+
+        long quizID;
+        @Override
+        protected StateQuizData.Quiz doInBackground(StateQuizData.Quiz... params) {
+
+            stateQuizData.open();
+            stateQuizData.updateQuiz(params[0].getQuizID(), params[0].getAnsweredQuestions(), params[0].getCorrectAnswers());
+            return params[0];
+        }
+
+        @Override
+        protected void onPostExecute(StateQuizData.Quiz quiz) {
+            // Extra just in case
+        }
+
     }
 }
